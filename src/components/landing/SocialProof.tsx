@@ -24,9 +24,17 @@ function StarRating({ rating = 5 }: { rating?: number }) {
 export default function SocialProof({
   sectionTitle,
   sectionSubtitle,
-  testimonials,
+  testimonials = [],
   stats,
-}: SocialProofProps) {
+  testimonial,
+}: SocialProofProps & { testimonial?: { quote: string; author: string; role?: string } }) {
+  // Handle both single testimonial and array of testimonials
+  const testimonialList = testimonials.length > 0
+    ? testimonials
+    : testimonial
+      ? [{ quote: testimonial.quote, author: testimonial.author, title: testimonial.role || '', rating: 5 }]
+      : [];
+
   return (
     <section className="py-24 lg:py-32 bg-neutral-950 text-white overflow-hidden">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
@@ -63,8 +71,9 @@ export default function SocialProof({
         )}
 
         {/* Testimonials */}
+        {testimonialList.length > 0 && (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {testimonials.map((testimonial, index) => (
+          {testimonialList.map((testimonial, index) => (
             <div
               key={index}
               className={`relative p-8 rounded-3xl ${
@@ -136,6 +145,7 @@ export default function SocialProof({
             </div>
           ))}
         </div>
+        )}
 
         {/* Bottom trust bar */}
         <div className="mt-16 pt-16 border-t border-neutral-800">
